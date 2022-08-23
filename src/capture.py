@@ -109,7 +109,7 @@ def record_data(args, output_path):
 
         # move the files 
         date = datetime.today().strftime('%Y_%m_%d')
-        pupil_default_dir = os.path.join("recordings", date, "000")
+        pupil_default_dir = os.path.join(os.path.expanduser("~"), "recordings", date, "000")
         pupil_output = os.path.join(output_path, 'pupil')
         
         os.makedirs(pupil_output, exist_ok=True)
@@ -125,7 +125,7 @@ if __name__ == '__main__':
 
     # OPTIONS
     parser.add_argument("--output",
-                        default="~/Data/Pupil-Depth/",
+                        default="../data/",
                         help="path to output directory")
     parser.add_argument("--max-frames-per-second",
                         default=70,
