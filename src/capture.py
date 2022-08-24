@@ -35,8 +35,9 @@ def record_data(args, output_path):
 
     if not args.realsense_off:
 
-        color_path = os.path.join(output_path, 'rs_rgb.avi')
-        depth_path = os.path.join(output_path, 'rs_depth.avi')
+        os.makedirs(output_path, exist_ok=True)
+        color_path = os.path.join(output_path, 'rs_rgb.mp4')
+        depth_path = os.path.join(output_path, 'rs_depth.mp4')
 
         # realsense set up
         pipeline = rs.pipeline()
@@ -47,7 +48,7 @@ def record_data(args, output_path):
         # video writers
         colorwriter = cv2.VideoWriter(
             filename=color_path,
-            fourcc=cv2.VideoWriter_fourcc(*'XVID'),
+            fourcc=cv2.VideoWriter_fourcc(*'MPEG'),
             fps=30,
             frameSize=(640, 480),
             isColor=1
@@ -55,7 +56,7 @@ def record_data(args, output_path):
 
         depthwriter = cv2.VideoWriter(
             filename=depth_path,
-            fourcc=cv2.VideoWriter_fourcc(*'XVID'),
+            fourcc=cv2.VideoWriter_fourcc(*'MPEG'),
             fps=30,
             frameSize=(640, 480),
             isColor=1
@@ -85,10 +86,10 @@ def record_data(args, output_path):
                 colorwriter.write(color_image)
                 depthwriter.write(depth_colormap)
 
-                cv2.imshow('Stream', depth_colormap)
+                # cv2.imshow('Stream', depth_colormap)
 
-                if cv2.waitKey(1) == ord("q"):
-                    break
+                # if cv2.waitKey(1) == ord("q"):
+                #     break
 
         finally:
 
