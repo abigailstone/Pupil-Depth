@@ -113,6 +113,7 @@ def record_data(args, output_path):
         pupil_default_dir = os.path.join(os.path.expanduser("~"), "recordings", date, "000")
         pupil_output = os.path.join(output_path, 'pupil')
         
+        time.sleep(5) # pause so that all pupil data is written 
         os.makedirs(pupil_output, exist_ok=True)
         os.rename(pupil_default_dir, pupil_output)
 
