@@ -5,6 +5,7 @@ Capture interface
 import argparse
 import time
 from datetime import datetime
+import csv 
 
 import zmq
 import os
@@ -117,6 +118,17 @@ def record_data(args, output_path):
         os.makedirs(pupil_output, exist_ok=True)
         os.rename(pupil_default_dir, pupil_output)
 
+def fill_checklist(participant, dist):
+    """
+    write which participants/distances have been recorded to a .csv file
+    """
+    row = [str(participant), str(dist)]
+
+    with open('../data/checklist.csv', 'a') as file:
+
+        filewriter = csv.writer(file, delimiter=',')
+        filewriter.writerow(row)
+
 
 if __name__ == '__main__':
 
@@ -172,3 +184,4 @@ if __name__ == '__main__':
     print(f'output path: {output_path}')
 
     record_data(args, output_path)
+    fill_checklist(participant, dist)
