@@ -29,6 +29,17 @@ def record_data(args, output_path):
         pupil_remote = zmq.Socket(ctx, zmq.REQ)
         pupil_remote.connect(f"tcp://{args.pupil_ip}:{args.pupil_port}")
 
+        pupil_remote.send_string('SUB_PORT')
+        sub_port = pupil_remote.recv_string() 
+
+        pupil_remote.send_string('PUB_PORT')
+        pub_port = pupil_remote.recv_string() 
+
+        # subscribe to gaze info
+        subscriber = ctx.socket(zmq.SUB)
+        subscriber.connect(f"tcp://{args.pupil_ip}:{args.pupil_port}")
+        subscriber.subscribe('gaze.')
+
         # start pupil recording
         pupil_remote.send_string('R')
         print(f"Start Pupil recording: {pupil_remote.recv_string()}")
@@ -118,14 +129,13 @@ def record_data(args, output_path):
         os.makedirs(pupil_output, exist_ok=True)
         os.rename(pupil_default_dir, pupil_output)
 
-def fill_checklist(participant, dist):
+def fill_checklist(args, participant, dist):
     """
     write which participants/distances have been recorded to a .csv file
     """
     row = [str(participant), str(dist)]
 
     with open('../data/checklist.csv', 'a') as file:
-
         filewriter = csv.writer(file, delimiter=',')
         filewriter.writerow(row)
 
@@ -181,7 +191,6 @@ if __name__ == '__main__':
     dist = input("Enter distance (ft): ")
 
     output_path = os.path.join(args.output, participant, dist)
-    print(f'output path: {output_path}')
 
     record_data(args, output_path)
-    fill_checklist(participant, dist)
+    fill_checklist(args, participant, dist)
